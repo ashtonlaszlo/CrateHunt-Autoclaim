@@ -14,8 +14,8 @@
 
     let intervalID;
     let isRunning = false;
-    const minInterval = 65 * 60 * 1000; // 61 minutes in milliseconds
-    const maxInterval = 70 * 60 * 1000; // 65 minutes in milliseconds
+    const minInterval = 65 * 60 * 1000; 
+    const maxInterval = 70 * 60 * 1000; 
 
     // Function to click the button
     function clickButton() {
@@ -37,25 +37,26 @@
 
     // Create and style the toggle button
     const toggleButton = document.createElement('button');
-    toggleButton.innerText = 'Start Autoclaim';
+    toggleButton.innerText = 'Start';
     toggleButton.style.position = 'fixed';
     toggleButton.style.right = '10px';
-    toggleButton.style.top = '7%';
+    toggleButton.style.top = '20%';
     toggleButton.style.zIndex = '1000';
-    toggleButton.style.backgroundColor = '#8A2BE2';
+    toggleButton.style.backgroundColor = '#BA55D3'; // Change this to your chosen purple color
     toggleButton.style.color = 'white';
     toggleButton.style.border = 'none';
     toggleButton.style.padding = '10px';
     toggleButton.style.cursor = 'pointer';
-    toggleButton.style.fontWeight = 'bold';
+    toggleButton.style.fontWeight = 'bold'; // Make the text bold
+    toggleButton.style.fontFamily = 'Georgia, serif'; // Change font
     document.body.appendChild(toggleButton);
 
     // Function to start the script
     function startScript() {
         if (!isRunning) {
             isRunning = true;
-            toggleButton.innerText = 'Stop Autoclaim';
-            scheduleNextClick();
+            toggleButton.innerText = 'Stop';
+            clickButton(); // Click the button immediately when starting
         }
     }
 
@@ -63,7 +64,7 @@
     function stopScript() {
         if (isRunning) {
             isRunning = false;
-            toggleButton.innerText = 'Start Autoclaim';
+            toggleButton.innerText = 'Start';
             clearTimeout(intervalID);
         }
     }
