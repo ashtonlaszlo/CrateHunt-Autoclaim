@@ -14,8 +14,8 @@
 
     let intervalID;
     let isRunning = false;
-    const minInterval = 65 * 60 * 1000; 
-    const maxInterval = 70 * 60 * 1000; 
+    const minInterval = 65 * 60 * 1000; // 61 minutes in milliseconds
+    const maxInterval = 70 * 60 * 1000; // 65 minutes in milliseconds
 
     // Function to click the button
     function clickButton() {
@@ -40,9 +40,9 @@
     toggleButton.innerText = 'Start';
     toggleButton.style.position = 'fixed';
     toggleButton.style.right = '10px';
-    toggleButton.style.top = '20%';
+    toggleButton.style.top = '7%';
     toggleButton.style.zIndex = '1000';
-    toggleButton.style.backgroundColor = '#BA55D3'; // Change this to your chosen purple color
+    toggleButton.style.backgroundColor = '#9400D3'; // Change this to your chosen purple color
     toggleButton.style.color = 'white';
     toggleButton.style.border = 'none';
     toggleButton.style.padding = '10px';
