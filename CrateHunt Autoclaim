@@ -2,7 +2,7 @@
 // @name         CrateHunt Autoclaim
 // @namespace    http://tampermonkey.net/
 // @version      1.0
-// @description  Click a button at a random interval between 61 and 65 minutes on specific pages
+// @description  Click crate hunt button at a random interval between 61 and 65 minutes on specific pages
 // @author       ashtonlaszlo
 // @match        https://www.lootius.io/
 // @match        https://www.lootius.io/CrateHunt
