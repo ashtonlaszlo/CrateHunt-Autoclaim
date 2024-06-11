@@ -13,65 +13,93 @@
     'use strict';
 
     let intervalID;
-    let isRunning = false;
-    const minInterval = 65 * 60 * 1000; // 61 minutes in milliseconds
-    const maxInterval = 70 * 60 * 1000; // 65 minutes in milliseconds
+    let initialTimeoutID;
+    const minInterval = 65 * 60 * 1000; 
+    const maxInterval = 70 * 60 * 1000; 
+    const initialDelay = 30 * 1000; 
 
-    // Function to click the button
     function clickButton() {
-        const button = document.querySelector('#nav-toggleable-md > ul:nth-child(1) > li:nth-child(11) > a:nth-child(1)');
-        if (button) {
-            button.click();
-            console.log('Button clicked!');
-        } else {
-            console.log('Button not found!');
+        try {
+            const button = document.querySelector('#nav-toggleable-md > ul:nth-child(1) > li:nth-child(11) > a:nth-child(1)');
+            if (button) {
+                button.click();
+                console.log('Button clicked at ' + new Date().toLocaleTimeString());
+                const nextClickTime = Date.now() + Math.floor(Math.random() * (maxInterval - minInterval + 1)) + minInterval;
+                localStorage.setItem('nextClickTime', nextClickTime);
+                scheduleNextClick(nextClickTime - Date.now());
+            } else {
+                console.log('Button not found at ' + new Date().toLocaleTimeString());
+            }
+        } catch (error) {
+            console.error('Error clicking the button:', error);
         }
-        scheduleNextClick();
     }
 
-    // Function to schedule the next click
-    function scheduleNextClick() {
-        const randomInterval = Math.floor(Math.random() * (maxInterval - minInterval + 1)) + minInterval;
-        intervalID = setTimeout(clickButton, randomInterval);
+    function scheduleNextClick(delay) {
+        console.log('Next click scheduled in ' + (delay / 1000 / 60).toFixed(2) + ' minutes (' + (delay / 1000).toFixed(0) + ' seconds).');
+        intervalID = setTimeout(clickButton, delay);
     }
 
-    // Create and style the toggle button
     const toggleButton = document.createElement('button');
-    toggleButton.innerText = 'Start';
+    toggleButton.innerText = 'Start Autoclaim';
     toggleButton.style.position = 'fixed';
     toggleButton.style.right = '10px';
     toggleButton.style.top = '7%';
     toggleButton.style.zIndex = '1000';
-    toggleButton.style.backgroundColor = '#9400D3'; // Change this to your chosen purple color
+    toggleButton.style.backgroundColor = '#BF00FF'; 
     toggleButton.style.color = 'white';
     toggleButton.style.border = 'none';
     toggleButton.style.padding = '10px';
     toggleButton.style.cursor = 'pointer';
-    toggleButton.style.fontWeight = 'bold'; // Make the text bold
-    toggleButton.style.fontFamily = 'Georgia, serif'; // Change font
+    toggleButton.style.fontWeight = 'bold'; 
+    toggleButton.style.fontFamily = 'Georgia, serif'; 
     document.body.appendChild(toggleButton);
 
-    // Function to start the script
     function startScript() {
-        if (!isRunning) {
-            isRunning = true;
-            toggleButton.innerText = 'Stop';
-            clickButton(); // Click the button immediately when starting
+        if (localStorage.getItem('autoClickerRunning') !== 'true') {
+            localStorage.setItem('autoClickerRunning', 'true');
+            toggleButton.innerText = 'Stop Autoclaim';
+            console.log('Script started at ' + new Date().toLocaleTimeString());
+            const nextClickTime = Date.now() + initialDelay;
+            localStorage.setItem('nextClickTime', nextClickTime);
+            initialTimeoutID = setTimeout(clickButton, initialDelay); 
+            console.log('Initial click scheduled in 30 seconds.');
         }
     }
 
-    // Function to stop the script
     function stopScript() {
-        if (isRunning) {
-            isRunning = false;
-            toggleButton.innerText = 'Start';
+        if (localStorage.getItem('autoClickerRunning') === 'true') {
+            localStorage.setItem('autoClickerRunning', 'false');
+            toggleButton.innerText = 'Start Autoclaim';
             clearTimeout(intervalID);
+            clearTimeout(initialTimeoutID);
+            localStorage.removeItem('nextClickTime');
+            console.log('Script stopped at ' + new Date().toLocaleTimeString());
         }
     }
 
-    // Toggle button event listener
+    window.addEventListener('load', () => {
+        if (localStorage.getItem('autoClickerRunning') === 'true') {
+            toggleButton.innerText = 'Stop Autoclaim';
+            console.log('Script resumed after reload at ' + new Date().toLocaleTimeString());
+            const nextClickTime = localStorage.getItem('nextClickTime');
+            if (nextClickTime) {
+                const delay = nextClickTime - Date.now();
+                if (delay > 0) {
+                    console.log('Next click will occur in ' + (delay / 1000 / 60).toFixed(2) + ' minutes (' + (delay / 1000).toFixed(0) + ' seconds).');
+                    intervalID = setTimeout(clickButton, delay);
+                } else {
+                    clickButton();
+                }
+            } else {
+                initialTimeoutID = setTimeout(clickButton, initialDelay); 
+                console.log('Initial click scheduled in 30 seconds.');
+            }
+        }
+    });
+
     toggleButton.addEventListener('click', function() {
-        if (isRunning) {
+        if (localStorage.getItem('autoClickerRunning') === 'true') {
             stopScript();
         } else {
             startScript();
